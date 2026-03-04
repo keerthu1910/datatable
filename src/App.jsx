@@ -1,5 +1,8 @@
+import {Datatable} from './components/Datatable.jsx';
 function App() {
-  return <></>;
+  return <>
+  <Datatable />
+  </>;
 }
 
 export default App;
