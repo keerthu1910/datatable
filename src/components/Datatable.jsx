@@ -100,13 +100,15 @@ export const Datatable = () => {
   const handleName = () => {
     if (nameFilter === "ascending") {
       setNameFilter("descending");
-      const temp = results.map((item) => {
-        item.name.sort();
+      const temp = results.sort((a, b) => {
+        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
       });
       setResults(temp);
     } else if (nameFilter === "descending") {
       setNameFilter("ascending");
-      const temparr = results.sort((b, a) => b.name - a.name);
+      const temparr = results.sort((a, b) => {
+        return b.name.toLowerCase().localeCompare(a.name.toLowerCase());
+      });
       setResults(temparr);
     }
   };
@@ -128,31 +130,58 @@ export const Datatable = () => {
       </div>
 
       <div>
-        <table>
-          <thead>
-            <tr className="flex justify-between bg-gray-200 p-4 rounded-lg w-200 m-2">
-              <td className="font-bold" onClick={handleName}>
-                Name
-              </td>
-              <td className="font-bold">Email</td>
-              <td className="font-bold" onClick={handleAge}>
-                Age
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            {results.slice(page, page + limit).map((item) => (
-              <tr
-                key={item.id}
-                className="flex justify-between bg-gray-200 p-4 rounded-lg w-200 m-2"
-              >
-                <td className="font-bold">{item.name}</td>
-                <td>{item.email}</td>
-                <td>{item.age}</td>
+        {results.length !== 0 ? (
+          <table>
+            <thead>
+              <tr className="flex justify-between bg-gray-200 p-4 rounded-lg w-200 m-2">
+                <td className="font-bold" onClick={handleName}>
+                  Name
+                </td>
+                <td className="font-bold">Email</td>
+                <td className="font-bold" onClick={handleAge}>
+                  Age
+                </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {results.slice(page, page + limit).map((item) => (
+                <tr
+                  key={item.id}
+                  className="flex justify-between bg-gray-200 p-4 rounded-lg w-200 m-2"
+                >
+                  <td className="font-bold">{item.name}</td>
+                  <td>{item.email}</td>
+                  <td>{item.age}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <></>
+        )}
+        {results.length !== 0 ? (
+          <div className="flex justify-between items-center">
+            <button
+              className="p-4 bg-gray-300 rounded-lg"
+              onClick={() => (page === 0 ? setPage(0) : setPage(page - limit))}
+            >
+              Previous
+            </button>
+            <button
+              className="p-4 bg-gray-300 rounded-lg"
+              onClick={() => {
+                page >= results.length - 1
+                  ? setPage(results.length - limit)
+                  : setPage(page + limit);
+                console.log(page);
+              }}
+            >
+              Next
+            </button>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
